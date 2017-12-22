@@ -16,8 +16,11 @@ public class Constant {
     /**
      * handler的常量值
      */
-    public final static int WHAT_DIALOG_CLOSE = 200;
+    public final static int WHAT_DIALOG_CLOSE = 100;
+    public final static int WHAT_SECOND_FINISH = 200;
     public final static int DELAY_TIME_SHORT = 1000;
+    public final static int DELAY_TIME_LONG = 50000;
+
 
     /**
      * 音量的常量值

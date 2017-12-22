@@ -39,7 +39,7 @@ public class AudioManager {
             Log.w(TAG, "录音保存地址不存在");
             return;
         }
-        Log.i(TAG,"录音保存地址"+url);
+        Log.i(TAG, "录音保存地址" + url);
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -51,7 +51,11 @@ public class AudioManager {
         } catch (IOException e) {
             Log.e(TAG, "MediaRecorder prepare() failed");
         }
-        mRecorder.start();
+        try {
+            mRecorder.start();
+        } catch (IllegalStateException e) {
+            Log.e(TAG, " mRecorder start is failed");
+        }
     }
 
     /**

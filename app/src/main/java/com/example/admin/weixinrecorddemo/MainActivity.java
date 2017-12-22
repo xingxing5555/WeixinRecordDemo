@@ -30,9 +30,9 @@ import java.util.Locale;
 
 /**
  * @author Xinxin Shi
- *         1、1秒误触处理
- *         2、上滑取消，下滑发送
- *         3、获取权限时的录音资源及UI处理
+ *         num1、1秒误触处理
+ *         num2、上滑取消，下滑发送
+ *         num3、获取权限时的录音资源及UI处理
  */
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener, AudioManager.OnVolumeChangeListener {
     private final static String TAG = MainActivity.class.getSimpleName();
@@ -45,11 +45,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private DialogManager dialogManager;
     private AudioManager audioManager;
     private MainHander mainHander;
-    private long time;
+    private long time, downTime, numbe = 10;
     private String url = null;
     private RecordAdapter recordAdapter;
     private float downY;
-    private boolean isCanceled = false;
+    private boolean isCanceled = false, isLastTime = false;
 
 
     @Override
@@ -121,8 +121,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         dialogManager.updateUI(R.mipmap.listener00, getString(R.string.speaking));
         recordDialogShow.show();
         time = System.currentTimeMillis();
+        downTime = time;
         url = getFlieUrl();
         audioManager.startRecording(url);
+        mainHander.sendEmptyMessageDelayed(Constant.WHAT_SECOND_FINISH, Constant.DELAY_TIME_LONG);
+        isLastTime = false;
+        numbe = 10;
     }
 
     /**
@@ -142,8 +146,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
         recordDialogShow.dismiss();
 //                是否取消发送
-        if (!isCanceled) {
+        if (!isCanceled && !isLastTime) {
             fileList.add(url);
+            Log.e(TAG, "抬手时添加数据");
             recordAdapter.notifyDataSetChanged();
         }
         return false;
@@ -202,25 +207,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     @Override
     public void onVolumeChange(double value) {
         Log.i(TAG, "当时获取到的音量为：" + value);
-        int volume = (int) value;
-        int resId = R.mipmap.listener00;
-        if (volume > Constant.VALUE_0 && volume < Constant.VALUE_10) {
-            resId = R.mipmap.listener01;
-        } else if (volume < Constant.VALUE_20) {
-            resId = R.mipmap.listener02;
-        } else if (volume < Constant.VALUE_30) {
-            resId = R.mipmap.listener03;
-        } else if (volume < Constant.VALUE_40) {
-            resId = R.mipmap.listener04;
-        } else if (volume < Constant.VALUE_50) {
-            resId = R.mipmap.listener05;
-        } else if (volume < Constant.VALUE_60) {
-            resId = R.mipmap.listener07;
-        } else if (volume < Constant.VALUE_100) {
-            resId = R.mipmap.listener08;
+        int volume = (int) (value / 10);
+        int mipmapId = volume;
+        if (volume == 9 || volume == 10) {
+            mipmapId = 8;
         }
-        if (!isCanceled) {
-            dialogManager.updateUI(resId, getString(R.string.speaking));
+        mipmapId = getResources().getIdentifier("listener0" + mipmapId, "mipmap", getPackageName());
+        if (!isCanceled && !isLastTime) {
+            dialogManager.updateUI(mipmapId, getString(R.string.speaking));
         }
     }
 
@@ -258,6 +252,28 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     recordDialogShow.dismiss();
                 }
                 break;
+            case Constant.WHAT_SECOND_FINISH:
+                if (downTime != time) {
+                    return;
+                }
+                isLastTime = true;
+                if (numbe == 0) {
+                    dialogManager.updateUI(R.mipmap.warning, getString(R.string.speak_long));
+                    audioManager.stopRecording();
+                    recordDialogShow.dismiss();
+                    fileList.add(url);
+                    recordAdapter.notifyDataSetChanged();
+                    isCanceled = true;
+                }
+
+                if (numbe > 0) {
+                    int mipmapId = getResources().getIdentifier("num" + numbe, "mipmap", getPackageName());
+                    dialogManager.updateUI(mipmapId, getString(R.string.speaking));
+                    numbe--;
+                    mainHander.sendEmptyMessageDelayed(Constant.WHAT_SECOND_FINISH, Constant.DELAY_TIME_SHORT);
+                }
+
+                break;
             default:
                 break;
         }
@@ -279,6 +295,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             //外部存储不可用
             cachePath = getCacheDir().getAbsolutePath();
         }
-        return String.format(Locale.getDefault(), "%1$s%2$s%3$d%4$s", cachePath, File.separator, System.currentTimeMillis(), ".mp3");
+        return String.format(Locale.getDefault(), "%1$s%2$s%3%d%4$s", cachePath, File.separator, System.currentTimeMillis(), ".mp3");
     }
 }

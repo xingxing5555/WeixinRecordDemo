@@ -30,9 +30,10 @@ import java.util.Locale;
 
 /**
  * @author Xinxin Shi
- *         num1、1秒误触处理
- *         num2、上滑取消，下滑发送
- *         num3、获取权限时的录音资源及UI处理
+ *         1、1秒误触处理
+ *         2、上滑取消，下滑发送
+ *         3、获取权限时的录音资源及UI处理
+ *         4、语音1分钟限时
  */
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener, AudioManager.OnVolumeChangeListener {
     private final static String TAG = MainActivity.class.getSimpleName();
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private DialogManager dialogManager;
     private AudioManager audioManager;
     private MainHander mainHander;
-    private long time, downTime, numbe = 10;
+    private long time, downTime, number = 10;
     private String url = null;
     private RecordAdapter recordAdapter;
     private float downY;
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         audioManager.startRecording(url);
         mainHander.sendEmptyMessageDelayed(Constant.WHAT_SECOND_FINISH, Constant.DELAY_TIME_LONG);
         isLastTime = false;
-        numbe = 10;
+        number = 10;
     }
 
     /**
@@ -148,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 //                是否取消发送
         if (!isCanceled && !isLastTime) {
             fileList.add(url);
-            Log.e(TAG, "抬手时添加数据");
             recordAdapter.notifyDataSetChanged();
         }
         return false;
@@ -184,21 +184,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case Constant.REQUEST_RECORD_AUDIO_PERMISSION:
-                permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                break;
-            default:
-                break;
-        }
-        if (!permissionToRecordAccepted) {
-            finish();
-        }
-    }
-
     /**
      * 录音音量监听的回调
      *
@@ -207,10 +192,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     @Override
     public void onVolumeChange(double value) {
         Log.i(TAG, "当时获取到的音量为：" + value);
-        int volume = (int) (value / 10);
+        int volume = (int) (value / Constant.VALUE_10);
         int mipmapId = volume;
-        if (volume == 9 || volume == 10) {
-            mipmapId = 8;
+        if (volume == Constant.VALUE_9 || volume == Constant.VALUE_10) {
+            mipmapId = Constant.VALUE_8;
         }
         mipmapId = getResources().getIdentifier("listener0" + mipmapId, "mipmap", getPackageName());
         if (!isCanceled && !isLastTime) {
@@ -257,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     return;
                 }
                 isLastTime = true;
-                if (numbe == 0) {
+                if (number == 0) {
                     dialogManager.updateUI(R.mipmap.warning, getString(R.string.speak_long));
                     audioManager.stopRecording();
                     recordDialogShow.dismiss();
@@ -266,10 +251,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     isCanceled = true;
                 }
 
-                if (numbe > 0) {
-                    int mipmapId = getResources().getIdentifier("num" + numbe, "mipmap", getPackageName());
+                if (number > 0) {
+                    int mipmapId = getResources().getIdentifier("num" + number, "mipmap", getPackageName());
                     dialogManager.updateUI(mipmapId, getString(R.string.speaking));
-                    numbe--;
+                    number--;
                     mainHander.sendEmptyMessageDelayed(Constant.WHAT_SECOND_FINISH, Constant.DELAY_TIME_SHORT);
                 }
 
@@ -280,20 +265,34 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case Constant.REQUEST_RECORD_AUDIO_PERMISSION:
+                permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                break;
+            default:
+                break;
+        }
+        if (!permissionToRecordAccepted) {
+            finish();
+        }
+    }
+
     /**
      * 文件保存的本地位置
      *
      * @return 资源本地位置 url: /data/data/com.example.admin.weixinrecorddemo/cache/1513913361991.3gp
      */
     public String getFlieUrl() {
-        String cachePath;
+        String cachePath = getCacheDir().getAbsolutePath();
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
                 || !Environment.isExternalStorageRemovable()) {
             //外部存储可用
-            cachePath = getExternalCacheDir().getAbsolutePath();
-        } else {
-            //外部存储不可用
-            cachePath = getCacheDir().getAbsolutePath();
+            if (null != getExternalCacheDir()) {
+                cachePath = getExternalCacheDir().getAbsolutePath();
+            }
         }
         return String.format(Locale.getDefault(), "%1$s%2$s%3%d%4$s", cachePath, File.separator, System.currentTimeMillis(), ".mp3");
     }

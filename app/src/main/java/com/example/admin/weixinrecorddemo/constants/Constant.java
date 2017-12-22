@@ -25,10 +25,10 @@ public class Constant {
     /**
      * 音量的常量值
      */
-    public final static int VALUE_0 = 0;
+    public final static int VALUE_8 = 8;
+    public final static int VALUE_9 = 9;
     public final static int VALUE_10 = 10;
     public final static int VALUE_20 = 20;
-    public final static int VALUE_30 = 30;
     public final static int VALUE_40 = 40;
     public final static int VALUE_50 = 50;
     public final static int VALUE_60 = 60;

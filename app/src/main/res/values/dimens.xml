@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dimen_8">8dp</dimen>
+    <dimen name="dimen_75">75dp</dimen>
+    <dimen name="dimen_70">70dp</dimen>
+    <dimen name="dimen_25">25dp</dimen>
+    <dimen name="dimen_30">30dp</dimen>
+    <dimen name="dimen_35">35dp</dimen>
+    <dimen name="dimen_10">10dp</dimen>
+    <dimen name="dimen_20">20dp</dimen>
+    <dimen name="dimen_60">60dp</dimen>
+    <dimen name="dimen_40">40dp</dimen>
+    <dimen name="dimen_50">50dp</dimen>
+    <dimen name="dimen_5">5dp</dimen>
+    <dimen name="dimen_3">3dp</dimen>
+    <dimen name="dimen_80">80dp</dimen>
+    <dimen name="dimen_160">160dp</dimen>
+    <dimen name="dimen_150">150dp</dimen>
+    <dimen name="dimen_18">18dp</dimen>
+    <dimen name="dimen_100">100dp</dimen>
+    <dimen name="dimen_90">90dp</dimen>
+    <dimen name="dimen_200">200dp</dimen>
+    <dimen name="dimen_250">250dp</dimen>
+    <dimen name="dimen_400">400dp</dimen>
+    <dimen name="dimen_155">155dp</dimen>
+    <dimen name="dimen_148">148dp</dimen>
+    <dimen name="dimen_170">170dp</dimen>
+    <dimen name="dimen_180">180dp</dimen>
+    <dimen name="dimen_15">15dp</dimen>
+
+    <dimen name="info_my_pager">10dp</dimen>
+    <dimen name="info_my_pager01">75dp</dimen>
+    <dimen name="info_my_head">70dp</dimen>
+    <dimen name="info_my_pagerdp9">10dp</dimen>
+    <dimen name="info_my_pager02">25dp</dimen>
+    <dimen name="info_my_pager03">10dp</dimen>
+    <dimen name="info_my_pager04">20dp</dimen>
+    <dimen name="info_my_pager05">60dp</dimen>
+    <dimen name="info_my_pager06">40dp</dimen>
+    <dimen name="info_my_pager07">5dp</dimen>
+    <dimen name="info_my_pager08">3dp</dimen>
+    <dimen name="info_my_pager09">80dp</dimen>
+    <dimen name="info_my_pager10">160dp</dimen>
+    <dimen name="info_my_pager11">150dp</dimen>
+    <dimen name="info_my_pager12">18dp</dimen>
+    <dimen name="info_my_pager13">100dp</dimen>
+    <dimen name="info_my_pager14">90dp</dimen>
+    <dimen name="info_my_pager15">200dp</dimen>
+    <dimen name="dimen_300">300dp</dimen>
+    <dimen name="dimen_350">350dp</dimen>
+    <dimen name="info_my_pager16">155dp</dimen>
+    <dimen name="info_my_pager140">148dp</dimen>
+
+    <!--字体-->
+    <dimen name="sp_8">8sp</dimen>
+    <dimen name="sp_12">12sp</dimen>
+    <dimen name="sp_15">15sp</dimen>
+    <dimen name="sp_16">16sp</dimen>
+    <dimen name="sp_18">18sp</dimen>
+    <dimen name="sp_20">20sp</dimen>
+    <dimen name="sp_30">30sp</dimen>
+
+</resources>

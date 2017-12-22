@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">WeixinRecordDemo</string>
+    <string name="speak_short">说话时间太短</string>
+    <string name="speaking">手指上滑，取消发送</string>
+    <string name="cancle_speaking">松开手机，取消发送</string>
+</resources>

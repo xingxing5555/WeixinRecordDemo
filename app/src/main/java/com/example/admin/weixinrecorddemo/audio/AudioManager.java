@@ -61,21 +61,10 @@ public class AudioManager {
         if (null == mRecorder) {
             return;
         }
-        mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
     }
 
-    /**
-     * 用于获取权限时，未开始录音情况下，仅用来释放录音资源
-     */
-    public void cancelRecord() {
-        if (null == mRecorder) {
-            return;
-        }
-        mRecorder.release();
-        mRecorder = null;
-    }
 
     private final Handler mHandler = new Handler();
     private Runnable mUpdateMicStatusTimer = new Runnable() {

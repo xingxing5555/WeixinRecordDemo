@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private void handlerActionCancel() {
         Log.i(TAG, " ACTION_CANCEL ");
         recordDialogShow.dismiss();
-        audioManager.cancelRecord();
+        audioManager.stopRecording();
     }
 
 
